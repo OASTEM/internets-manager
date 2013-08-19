@@ -1,0 +1,21 @@
+#BlueJ class context
+comment0.params=i\ n
+comment0.target=Internets(int,\ java.lang.String)
+comment1.params=newInts
+comment1.target=Internets(Internets)
+comment2.params=num
+comment2.target=void\ setPercentage(int)
+comment3.params=
+comment3.target=int\ getPercentage()
+comment4.params=
+comment4.target=java.lang.String\ getName()
+comment4.text=\n\ \ \ \ public\ boolean\ getIsEmpty(){\n\ \ \ \ \ \ \ \ return\ isEmpty;\n\ \ \ \ }\n\ \ \ \ \n\ \ \ \ private\ void\ checkForEmpty(){\n\ \ \ \ \ \ \ \ if(internets\ >\ 0){\n\ \ \ \ \ \ \ \ \ \ \ \ isEmpty\ \=\ false;\n\ \ \ \ \ \ \ \ }\n\ \ \ \ \ \ \ \ else{\n\ \ \ \ \ \ \ \ \ \ \ \ isEmpty\ \=\ true;\n\ \ \ \ \ \ \ \ }\n\ \ \ \ }\n\ \ \ \ /**\n\ \ \ \ public\ void\ setCurrentlyPaid(int\ cp){\n\ \ \ \ \ \ \ \ currentlyPaid\ \=\ cp;\n\ \ \ \ }\n\ \ \ \ \n\ \ \ \ public\ void\ addCurrentlyPaid(int\ cp){\n\ \ \ \ \ \ \ \ currentlyPaid\ +\=\ cp;\n\ \ \ \ }\n
+comment5.params=
+comment5.target=int\ getInternets()
+comment6.params=
+comment6.target=java.lang.String\ getPrintOut()
+comment7.params=sub
+comment7.target=void\ subtractInters(int)
+comment8.params=sub
+comment8.target=void\ addInters(int)
+numComments=9
