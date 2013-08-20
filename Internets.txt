@@ -1,0 +1,8 @@
+DavidS:9.00
+AlecSa:13.50
+JoonJo:17.50
+PeterY:18.50
+MichaD:19.00
+JenniZ:5.00
+AnkurS:3.33
+NathaS:3.17

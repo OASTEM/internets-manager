@@ -12,17 +12,24 @@ public class InternetsList
     private int totalNets;
     private int[] percentages; //sorted greatest to least
     
+    /**
+     * Todo: Add method to check if account even exists
+     */
+    
     public InternetsList(List<String> list){
         convertToArrayList(list);
         sortByName();
         getTotalNets();
         percentagesMethods();
     }
-    
+
     public void createInternets(String n, int i){
         //interList.add(new Internets(i, n));
         Internets tempIn = new Internets(i, n);
-        interList.add(findInternetsPlace(tempIn, interList, getALocArray(interList)),tempIn);
+        int[] locArray = getALocArray(interList);
+        outPrint("Adding Account");
+        interList.add(findInternetsPlace(tempIn, interList, locArray),tempIn);
+        outPrintln("done.");
     }
     
     private int findInternetsPlace(Internets i, ArrayList<Internets> list, int[] locs){
@@ -56,17 +63,26 @@ public class InternetsList
     }
     
     private void setPercentages(){
+        outPrint("Setting %");
         for(int i = 0; i < interList.size(); i++){
-            interList.get(i).setPercentage(interList.get(i).getInternets()/totalNets);
+            //outPrint(".");
+            double percentageD = (double) interList.get(i).getInternets()/totalNets;
+            int percentageI = (int) (percentageD*10000);
+            outPrintln(percentageD +":"+percentageI);
+            interList.get(i).setPercentage(percentageI);
         }
+        outPrintln("done.");
     }
     
     private int[] getPercentages(ArrayList<Internets> list){
+        outPrint("Getting %");
         int k = 0;
         int[] newPercentages = new int[list.size()];
         for(Internets i : list){
+            outPrint(".");
             newPercentages[k] = i.getPercentage();
         }
+        outPrintln("done.");
         return newPercentages;
     }
     
@@ -76,8 +92,10 @@ public class InternetsList
     }
     
     public ArrayList<Internets> convertStrToArrayList(String[] names){
+        outPrint("Converting Sorted Array");
         ArrayList<Internets> thisList = new ArrayList<Internets>();
         for(int i = 0; i < names.length; i++){
+            outPrint(".");
             int k = 0;
             boolean isIn = false;
             while(isIn == false && k < interList.size()){
@@ -89,14 +107,18 @@ public class InternetsList
                 k++;
             }
         }
+        outPrintln("done.");
         return thisList;
     }
     
     private void getTotalNets(){
+        //outPrint("Getting Totals");
         totalNets = 0;
         for(Internets i : interList){
+            //outPrint(".");
             totalNets += i.getInternets();
         }
+        //outPrintln("done.");
     }
     
     public int getTotals(){
@@ -104,15 +126,18 @@ public class InternetsList
     }
     
     private void convertToArrayList(List<String> list){
+        outPrintln("Parsing File");
         interList = new ArrayList<Internets>();
         for(String s : list){
             int index = s.indexOf(":");
-            String name = s.substring(index,index+1);
+            String name = s.substring(0,index);
             String inters = s.substring(index+1, s.length());
+            outPrintln(name+":"+inters);
             double internets = Double.parseDouble(inters);
-            int inter = (int) internets*100;
+            int inter = (int) (internets*100);
             interList.add(new Internets(inter, name));
         }
+        outPrintln("done.");
     }
     
     private int getSmallestNet(){
@@ -197,6 +222,7 @@ public class InternetsList
     */
     public void subtractInternets(int sub, int[] ins){
         //getTotalNets();
+        outPrint(".");
         int[] validsLoc = getValidInternets(ins);
         int valids = validsLoc.length;
         int threshold = sub/(valids*100);
@@ -218,58 +244,95 @@ public class InternetsList
     
     public void subtractInternet(String name, int sub){
         int[] locArray = getALocArray(interList);
+        outPrint("Subtracting from Account");
         interList.get(findInternets(name, interList, locArray)).subtractInters(sub);
+        outPrintln("done.");
     }
     
     private void sortByName(){
+        outPrint("Generating Sort List");
         String[] strs = new String[interList.size()];
         for(int i = 0; i < interList.size(); i++){
+            outPrint(".");
             strs[i] = interList.get(i).getName();
         }
+        outPrintln("done.");
         MergeSort ms = new MergeSort(strs);
         strs = ms.getStrArray();
         interList = convertStrToArrayList(strs);
     }
     
     public int findInternets(String name, ArrayList<Internets> inList, int[] locs){
-        int q = interList.size()/2;
-        outPrint(".");
-        if(name.compareTo(inList.get(q).getName()) < 0){
-            return findInternets(name, new ArrayList<Internets>(inList.subList(0,q)), Arrays.copyOfRange(locs, 0, q));
+        if(inList.size() > 1){
+            int q = inList.size()/2;
+            outPrint(".");
+            outPrintln(""+q);
+            printArray(locs);
+            if(name.compareTo(inList.get(q).getName()) < 0){
+                return findInternets(name, new ArrayList<Internets>(inList.subList(0,q)), Arrays.copyOfRange(locs, 0, q));
+            }
+            else if(name.compareTo(inList.get(q).getName()) > 0){
+                return findInternets(name, new ArrayList<Internets>(inList.subList(q,inList.size())),Arrays.copyOfRange(locs, q, locs.length));
+            }
+            else{
+                return locs[q];
+            }
         }
-        else if(name.compareTo(inList.get(q).getName()) > 0){
-            return findInternets(name, new ArrayList<Internets>(inList.subList(q,inList.size())),Arrays.copyOfRange(locs, q, locs.length));
+        return locs[0];
+    }
+    
+    private void printArray(int[] ar){
+        for(int i : ar){
+            outPrint(""+i);
         }
-        else{
-            return locs[0];
-        }
+        outPrintln("");
     }
     
     public int[] getALocArray(ArrayList<Internets> list){
+        outPrint("Getting List of Locations");
         int[] locArray = new int[list.size()];
         for(int i = 0; i < locArray.length; i++){
+            outPrint(".");
             locArray[i] = i;
         }
+        outPrintln("done.");
         return locArray;
     }
     
     public void addInternets(String name, int ins){
         int[] locArray = getALocArray(interList);
+        outPrint("Adding internets");
         interList.get(findInternets(name, interList, locArray)).addInters(ins);
     }
     
     private int[] sortByInternets(int[] locs){
-        ArrayList<Internets> tempList = new ArrayList<Internets>();
+        //ArrayList<Internets> tempList = new ArrayList<Internets>();
+        int[][] newLocsArray = new int[2][locs.length];
         outPrint("Generating List");
-        for(int l : locs){
-            tempList.add(new Internets(interList.get(l)));
-            outPrint(".");
+        for(int l = 0; l < locs.length; l++){
+            //outPrint(""+l);
+            newLocsArray[0][l] = locs[l];
+            newLocsArray[1][l] = interList.get(locs[l]).getInternets();
+            outPrint(""+locs[l]);
+            outPrintln(""+newLocsArray[1][l]);
+            //tempList.add(new Internets(interList.get(l)));
+            //outPrint(".");
         }
-        MergeSort ms = new MergeSort(tempList, true);
-        tempList = new ArrayList<Internets>(ms.getList());
-        int[] newLocs = new int[tempList.size()];
+        outPrintln("done.");
+        MergeSort ms = new MergeSort(newLocsArray, true);
+        //tempList = new ArrayList<Internets>(ms.getList());
+        newLocsArray = ms.get2Array();
+        //int[][] newLocs = new int[tempList.size()];
+        int[] newLocs = new int[newLocsArray[0].length];
+        for(int i = 0; i < newLocsArray[0].length; i++){
+            newLocs[i] = newLocsArray[0][i];
+        }
+        return newLocs;
+        /**
         int k = 0;
+        outPrint("Getting Locations");
         for(Internets i : tempList){
+            outPrint(".");
             int in = 0;
             boolean isFound = false;
             while(!isFound && in < interList.size()){
@@ -283,31 +346,104 @@ public class InternetsList
                 }
             }
         }
+        outPrintln("done.");
         return newLocs;
+        //*/
+       //return newLocsArray;
     }
     
     public String calculatePayments(int[] locsArray, int ins){
         getTotalNets();
         int totals = totalNets;
+        printArray(locsArray);
         int[] internetsLeastToGreat = sortByInternets(locsArray);
-        ArrayList<Internets> newTempList = new ArrayList<Internets>();
-        for(int i : locsArray){
-            newTempList.add(new Internets(interList.get(i)));
+        printArray(internetsLeastToGreat);
+        //ArrayList<Internets> newTempList = new ArrayList<Internets>();
+        int[][] perLocsArray = new int[2][internetsLeastToGreat.length];
+        outPrint("Finding Accounts");
+        for(int i = 0; i < locsArray.length; i++){
+            //newTempList.add(new Internets(interList.get(i)));
+            perLocsArray[0][i] = locsArray[i];
+            perLocsArray[1][i] = interList.get(locsArray[i]).getPercentage();
+            outPrint(".");
         }
-        int[] percentagesOfLocsArray = getPercentages(newTempList);
-        MergeSort ms = new MergeSort(percentagesOfLocsArray, false);
-        percentagesOfLocsArray = ms.getArray();
+        outPrintln("done");
+        //int[] percentagesOfLocsArray = getPercentages(newTempList);
+        MergeSort ms = new MergeSort(perLocsArray, false);
+        perLocsArray = ms.get2Array();
+        //printArray(perLocsArray);
+        outPrint("Subtract from Accounts");
         subtractInternets(ins, locsArray); //COOKIE BUTTER
+        outPrintln("done.");
         String result = "";
-        int k = 0;
-        for(int i : internetsLeastToGreat){
-            int percentResult = percentagesOfLocsArray[k]*totals;
-            int percentResultFront = percentResult / 100;
-            int percentResultBack = percentResult % 100;
-            result = result + interList.get(i).getName() +":"+ percentResultFront +"."+ percentResultBack +"\n";
+        //int k = 0;
+        outPrint("Preparing results");
+        for(int i = 0; i < locsArray.length; i++){
+            outPrint(".");
+            //int percentResult = perLocsArray[1][*totals;
+            //result = result + interList.get(i).getName() +":"+ getPercentFront(percentResult) +"."+ getPercentBack(percentResult) +"\n";
+            int percentResult = ((perLocsArray[1][i]*ins)/10000);
+            result = result + interList.get(internetsLeastToGreat[i]).getName() +":"+getPercentFront(percentResult)+"."+getPercentBack(percentResult)+"$"+"\n";
+            //k++;
         }
         getTotalNets();
+        outPrintln("done.");
         return result;
+    }
+    
+    private String getPercentFront(int a){
+        return ""+(a/100);
+    }
+    
+    private String getPercentBack(int a){
+        return ""+(a%100);
+    }
+    
+    public String printOutText(boolean a, boolean i, boolean n, boolean p){
+        String result = "name:internets:percentage of total"+"\n";
+        outPrint("Preparing printout");
+        for(Internets k : interList){
+            outPrint(".");
+            if(a){
+                result = result + k.getName()+":"+getPercentFront(k.getInternets())+"."+getPercentBack(k.getInternets())+":"+getPercentFront(k.getPercentage())+"."+getPercentBack(k.getPercentage())+"\n";
+            }
+            else{
+                if(n){
+                    result = result + k.getName();
+                }
+                if(i){
+                    if(n){
+                        result = result + ":"+getPercentFront(k.getInternets())+"."+getPercentBack(k.getInternets());
+                    }
+                    else{
+                        result = result + getPercentFront(k.getInternets())+"."+getPercentBack(k.getInternets());
+                    }
+                }
+                if(p){
+                    if(n || i){
+                        result = result + ":"+getPercentFront(k.getPercentage())+"."+getPercentBack(k.getPercentage());
+                    }
+                    else{
+                        result = result + getPercentFront(k.getPercentage())+"."+getPercentBack(k.getPercentage());
+                    }
+                }
+                result = result + "\n";
+            }
+        }
+        outPrintln("done.");
+        return result;
+    }
+    
+    public ArrayList<String> writeFile(){
+        ArrayList<String> list = new ArrayList<String>();
+        outPrint("Preparing Save");
+        for(Internets k: interList){
+            outPrint(".");
+            //outPrintln(k.getName()+":"+getPercentFront(k.getInternets())+"."+getPercentBack(k.getInternets()));
+            list.add(k.getName()+":"+getPercentFront(k.getInternets())+"."+getPercentBack(k.getInternets()));
+        }
+        outPrintln("done.");
+        return list;
     }
     
     private void outPrintln(String text){

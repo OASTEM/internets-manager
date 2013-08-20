@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class MergeSort {
@@ -51,23 +52,39 @@ public class MergeSort {
     private static int[] array;
     private static String[] strArray;
     private static boolean isLow;
-    private static List<Internets> theList;
+    private static int[][] dArray;
+    //private static Simple2DArray s2A;
+    //private static CopyOnWriteArrayList<Internets> theList;
     
     public MergeSort(int[] nums, boolean iL){
-        
+        outPrint("Sorting");
         isLow = iL;
         mergeSort(nums);
+        outPrintln("done.");
         array = nums;
     }
     
-    public MergeSort(List<Internets> list, boolean iL){
+    public MergeSort(int[][] nums, boolean iL){
+        outPrint("Sorting");
+        //s2A = new Simple2DArray();
         isLow = iL;
-        theList = list;
-        mergeSortList(theList);
+        mergeSortDual(nums);
+        dArray = nums;
     }
+    /**
+    public MergeSort(List<Internets> list, boolean iL){
+        outPrint("Sorting");
+        isLow = iL;
+        theList = new CopyOnWriteArrayList<Internets>(list);
+        mergeSortList(theList);
+        outPrintln("done.");
+    }
+    */
     
     public MergeSort(String[] strs){
+        outPrint("Sorting");
         mergeSortStr(strs);
+        outPrintln("done.");
         strArray = strs;
     }
     
@@ -78,31 +95,35 @@ public class MergeSort {
     public int[] getArray(){
         return array;
     }
-    
-    public List<Internets> getList(){
+    /**
+    public CopyOnWriteArrayList<Internets> getList(){
         return theList;
+    }*/
+    public int[][] get2Array(){
+        return dArray;
     }
     
-    private void outPrintln(String text){
+    private static void outPrintln(String text){
         System.out.println(text);
     }
     
-    private void outPrint(String text){
+    private static void outPrint(String text){
         System.out.print(text);
     }
 
     static void mergeSort(int[] A) {
         if (A.length > 1) {
             int q = A.length/2;
-
+            outPrint(".");
             int[] leftArray = Arrays.copyOfRange(A, 0, q);
             int[] rightArray = Arrays.copyOfRange(A,q,A.length);
-
+            
             mergeSort(leftArray);
             mergeSort(rightArray);
 
             merge(A,leftArray,rightArray);
         }
+        //outPrintln(".");
     }
 
     static void merge(int[] a, int[] l, int[] r) {
@@ -112,6 +133,7 @@ public class MergeSort {
         i = li = ri = 0;
         if(isLow){
             while ( i < totElem) { 
+                outPrint(".");
                 if ((li < l.length) && (ri<r.length)) {
                     if (l[li] < r[ri]) {
                         a[i] = l[li];
@@ -127,6 +149,7 @@ public class MergeSort {
                 else {
                     if (li >= l.length) {
                         while (ri < r.length) {
+                            outPrint(".");
                             a[i] = r[ri];
                             i++;
                             ri++;
@@ -134,6 +157,7 @@ public class MergeSort {
                     }
                     if (ri >= r.length) {
                         while (li < l.length) {
+                            outPrint(".");
                             a[i] = l[li];
                             li++;
                             i++;
@@ -144,6 +168,7 @@ public class MergeSort {
         }
         else{
             while ( i < totElem) { 
+                outPrint(".");
                 if ((li < l.length) && (ri<r.length)) {
                     if (l[li] > r[ri]) {
                         a[i] = l[li];
@@ -159,6 +184,7 @@ public class MergeSort {
                 else {
                     if (li >= l.length) {
                         while (ri < r.length) {
+                            outPrint(".");
                             a[i] = r[ri];
                             i++;
                             ri++;
@@ -166,6 +192,7 @@ public class MergeSort {
                     }
                     if (ri >= r.length) {
                         while (li < l.length) {
+                            outPrint(".");
                             a[i] = l[li];
                             li++;
                             i++;
@@ -176,10 +203,131 @@ public class MergeSort {
         }
         //return a;
     }
+    
+    static int[][] copy2DArray(int[][] nums, int start, int end, int size){
+        int[][] tempArray = new int[2][size];
+        outPrintln("");
+        outPrintln("-----------");
+        outPrintln(start +" "+ end+" "+size+" "+nums.length+" "+nums[0].length);
+        outPrintln(tempArray.length+" "+tempArray[0].length);
+        outPrintln("-----------");
+        int k = 0;
+        for(int i = start; i < end;i++){
+            outPrint(""+nums[0][i]+":");
+            outPrintln(""+nums[1][i]);
+            tempArray[0][k] = nums[0][i];
+            tempArray[1][k] = nums[1][i];
+            k++;
+        }
+        return tempArray;
+    }
 
+    static void mergeSortDual(int[][] A) {
+        if (A[0].length > 1) {
+            int q = A[0].length/2;
+            outPrint(".");
+            int[][] leftArray = copy2DArray(A, 0, q, q);//Arrays.copyOfRange(A, 0, q);
+            int[][] rightArray = copy2DArray(A, q, A[0].length, A[0].length-q);//Arrays.copyOfRange(A,q,A.length);
+            
+            
+            mergeSortDual(leftArray);
+            mergeSortDual(rightArray);
+
+            mergeDual(A,leftArray,rightArray);
+        }
+        //outPrintln(".");
+    }
+
+    static void mergeDual(int[][] a, int[][] l, int[][] r) {
+        int totElem = l[0].length + r[0].length;
+        //int[] a = new int[totElem];
+        int i,li,ri;
+        i = li = ri = 0;
+        if(isLow){
+            while ( i < totElem) { 
+                outPrint(".");
+                if ((li < l[0].length) && (ri<r[0].length)) {
+                    if (l[1][li] < r[1][ri]) {
+                        a[0][i] = l[0][li];
+                        a[1][i] = l[1][li];
+                        i++;
+                        li++;
+                    }
+                    else {
+                        a[0][i] = r[0][ri];
+                        a[1][i] = r[1][ri];
+                        i++;
+                        ri++;
+                    }
+                }
+                else {
+                    if (li >= l[0].length) {
+                        while (ri < r[0].length) {
+                            outPrint(".");
+                            a[0][i] = r[0][ri];
+                            a[1][i] = r[1][ri];
+                            i++;
+                            ri++;
+                        }
+                    }
+                    if (ri >= r[0].length) {
+                        while (li < l[0].length) {
+                            outPrint(".");
+                            a[0][i] = l[0][li];
+                            a[1][i] = l[1][li];
+                            li++;
+                            i++;
+                        }
+                    }
+                }
+            }
+        }
+        else{
+            while ( i < totElem) { 
+                outPrint(".");
+                if ((li < l[0].length) && (ri<r[0].length)) {
+                    if (l[1][li] > r[1][ri]) {
+                        a[0][i] = l[0][li];
+                        a[1][i] = l[1][li];
+                        i++;
+                        li++;
+                    }
+                    else {
+                        a[0][i] = r[0][ri];
+                        a[1][i] = r[1][ri];
+                        i++;
+                        ri++;
+                    }
+                }
+                else {
+                    if (li >= l[0].length) {
+                        while (ri < r[0].length) {
+                            outPrint(".");
+                            a[0][i] = r[0][ri];
+                            a[1][i] = r[1][ri];
+                            i++;
+                            ri++;
+                        }
+                    }
+                    if (ri >= r[0].length) {
+                        while (li < l[0].length) {
+                            outPrint(".");
+                            a[0][i] = l[0][li];
+                            a[1][i] = l[1][li];
+                            li++;
+                            i++;
+                        }
+                    }
+                }
+            }
+        }
+        //return a;
+    }
+    
     static void mergeSortStr(String[] A) {
         if (A.length > 1) {
             int q = A.length/2;
+            outPrint(".");
 
             String[] leftArray = Arrays.copyOfRange(A, 0, q);
             String[] rightArray = Arrays.copyOfRange(A,q,A.length);
@@ -189,6 +337,7 @@ public class MergeSort {
 
             mergeStr(A,leftArray,rightArray);
         }
+        //outPrintln(".");
     }
 
     static void mergeStr(String[] a, String[] l, String[] r) {
@@ -197,6 +346,7 @@ public class MergeSort {
         int i,li,ri;
         i = li = ri = 0;
         while ( i < totElem) { 
+            outPrint(".");
             if ((li < l.length) && (ri<r.length)) {
                 if (l[li].compareTo(r[ri]) < 0) {
                     a[i] = l[li];
@@ -212,6 +362,7 @@ public class MergeSort {
             else {
                 if (li >= l.length) {
                     while (ri < r.length) {
+                        outPrint(".");
                         a[i] = r[ri];
                         i++;
                         ri++;
@@ -219,6 +370,7 @@ public class MergeSort {
                 }
                 if (ri >= r.length) {
                     while (li < l.length) {
+                        outPrint(".");
                         a[i] = l[li];
                         li++;
                         i++;
@@ -230,27 +382,31 @@ public class MergeSort {
 
     }
     
-    static void mergeSortList(List<Internets> A) {
+    /**
+    static void mergeSortList(CopyOnWriteArrayList<Internets> A) {
         if (A.size() > 1) {
             int q = A.size()/2;
+            outPrint(".");
 
-            List<Internets> leftArray = A.subList(0, q);
-            List<Internets> rightArray = A.subList(q,A.size());
+            CopyOnWriteArrayList<Internets> leftArray = new CopyOnWriteArrayList<Internets>(A.subList(0, q));
+            CopyOnWriteArrayList<Internets> rightArray = new CopyOnWriteArrayList<Internets>(A.subList(q,A.size()));
 
             mergeSortList(leftArray);
             mergeSortList(rightArray);
 
             mergeList(A,leftArray,rightArray);
         }
+        //outPrintln(".");
     }
 
-    static void mergeList(List<Internets> a, List<Internets> l, List<Internets> r) {
+    static void mergeList(CopyOnWriteArrayList<Internets> a, CopyOnWriteArrayList<Internets> l, CopyOnWriteArrayList<Internets> r) {
         int totElem = l.size() + r.size();
         //int[] a = new int[totElem];
         int i,li,ri;
         i = li = ri = 0;
         if(isLow){
             while ( i < totElem) { 
+                outPrint(".");
                 if ((li < l.size()) && (ri<r.size())) {
                     if (l.get(li).getInternets() < r.get(ri).getInternets()) {
                         a.add(l.get(li));
@@ -266,6 +422,7 @@ public class MergeSort {
                 else {
                     if (li >= l.size()) {
                         while (ri < r.size()) {
+                            outPrint(".");
                             a.add(r.get(ri));
                             i++;
                             ri++;
@@ -273,6 +430,7 @@ public class MergeSort {
                     }
                     if (ri >= r.size()) {
                         while (li < l.size()) {
+                            outPrint(".");
                             a.add(l.get(li));
                             li++;
                             i++;
@@ -283,6 +441,7 @@ public class MergeSort {
         }
         else{
             while ( i < totElem) { 
+                outPrint(".");
                 if ((li < l.size()) && (ri<r.size())) {
                     if (l.get(li).getInternets() > r.get(ri).getInternets()) {
                         a.add(l.get(li));
@@ -298,6 +457,7 @@ public class MergeSort {
                 else {
                     if (li >= l.size()) {
                         while (ri < r.size()) {
+                            outPrint(".");
                             a.add(r.get(ri));
                             i++;
                             ri++;
@@ -305,6 +465,7 @@ public class MergeSort {
                     }
                     if (ri >= r.size()) {
                         while (li < l.size()) {
+                            outPrint(".");
                             a.add(l.get(li));
                             li++;
                             i++;
@@ -314,5 +475,6 @@ public class MergeSort {
             }
         }
         //return a;
-    }
+        
+    }*/
 }
