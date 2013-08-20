@@ -33,6 +33,7 @@ public class InternetsRunner// implements ErrorMessages
                                 "create [name]:[internets]  ;Adds a new Internets Account" +"\n"+
                                 "                            with given name and internets" +"\n"+
                                 "                            amount" +"\n"+
+                                ""+ //todo, add in 'get' method which will get something and print it out
                                 "help                       ;Prints this page"+"\n"+
                                 "printout -OPTION(S)        ;Prints out something"+"\n"+
                                 "   -a                      ;Print all accounts information"+"\n"+ //sorted by name, cannot be used with other flags
@@ -48,7 +49,7 @@ public class InternetsRunner// implements ErrorMessages
                                 "v                          ;Prints current version"+"\n"+"\n"+
                                 "Multiply internets values by 100 before entering"+"\n"+
                                 "Press enter to return to main menu";
-    private static String version = "InternetsAccounts v0.9";
+    private static String version = "InternetsAccounts v0.9.2";
     private static ErrorMessages errs;
     private static String name;
     private static int internets;

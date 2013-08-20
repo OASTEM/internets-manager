@@ -6,3 +6,11 @@ MichaD:19.00
 JenniZ:5.00
 AnkurS:3.33
 NathaS:3.17
+BillTr:0.0
+AngelL:0.0
+HaileA:0.0
+ByronA:0.0
+AaronL:0.0
+KiranS:0.0
+RitviI:0.0
+Sambo?:0.0

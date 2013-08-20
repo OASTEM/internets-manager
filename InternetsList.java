@@ -225,7 +225,7 @@ public class InternetsList
         outPrint(".");
         int[] validsLoc = getValidInternets(ins);
         int valids = validsLoc.length;
-        int threshold = sub/(valids*100);
+        int threshold = sub/(valids);
         int smallestNet = getSmallestNetOf(ins);
         if(smallestNet <= threshold){
             for(int i = 0; i < valids; i++){
@@ -352,9 +352,21 @@ public class InternetsList
        //return newLocsArray;
     }
     
+    private int getTotalNetsOf(int[] locs){
+        int sum = 0;
+        for(int l : locs){
+            sum += interList.get(l).getInternets();
+        }
+        return sum;
+    }
+    
     public String calculatePayments(int[] locsArray, int ins){
         getTotalNets();
-        int totals = totalNets;
+        int totals = getTotalNetsOf(locsArray);
+        for(int l : locsArray){
+            int tempPercent = (int) (((interList.get(l).getInternets()*1.0)/(1.0*totals))*10000);
+            interList.get(l).setPercentage(tempPercent);
+        }
         printArray(locsArray);
         int[] internetsLeastToGreat = sortByInternets(locsArray);
         printArray(internetsLeastToGreat);
@@ -375,20 +387,110 @@ public class InternetsList
         outPrint("Subtract from Accounts");
         subtractInternets(ins, locsArray); //COOKIE BUTTER
         outPrintln("done.");
+        
+        /**
+         * locsArray is SORTEDBYNAME //[]
+         * perLocsArray is SORTEDBYPERCENTAGE //[][]
+         * internetsLeastToGreat is array of locs SORTEDBYINTERNETS //[]
+         */
+        int[][] changes = doubleCheck(ins, perLocsArray, internetsLeastToGreat);
+        int sum = 0;
         String result = "";
-        //int k = 0;
-        outPrint("Preparing results");
-        for(int i = 0; i < locsArray.length; i++){
-            outPrint(".");
-            //int percentResult = perLocsArray[1][*totals;
-            //result = result + interList.get(i).getName() +":"+ getPercentFront(percentResult) +"."+ getPercentBack(percentResult) +"\n";
-            int percentResult = ((perLocsArray[1][i]*ins)/10000);
-            result = result + interList.get(internetsLeastToGreat[i]).getName() +":"+getPercentFront(percentResult)+"."+getPercentBack(percentResult)+"$"+"\n";
-            //k++;
+        if(changes == null){
+            //String result = "";
+            //int k = 0;
+            outPrint("Preparing results");
+            
+            for(int i = 0; i < locsArray.length; i++){
+                outPrint(".");
+                //int percentResult = perLocsArray[1][*totals;
+                //result = result + interList.get(i).getName() +":"+ getPercentFront(percentResult) +"."+ getPercentBack(percentResult) +"\n";
+                int percentResult = ((perLocsArray[1][i]*ins)/10000);
+                sum += percentResult;
+                result = result + interList.get(internetsLeastToGreat[i]).getName() +":"+getPercentFront(percentResult)+"."+getPercentBack(percentResult)+"$"+"\n";
+                //k++;
+            }
+            getTotalNets();
+            outPrintln("done.");
         }
-        getTotalNets();
-        outPrintln("done.");
+        else{
+            
+            //String result = "";
+            //int k = 0;
+            outPrint("Preparing results");
+            for(int i = 0; i < locsArray.length; i++){
+                outPrint(".");
+                //int percentResult = perLocsArray[1][*totals;
+                //result = result + interList.get(i).getName() +":"+ getPercentFront(percentResult) +"."+ getPercentBack(percentResult) +"\n";
+                int percentResult = ((perLocsArray[1][i]*ins)/10000);
+                percentResult += changes[2][i];
+                sum += percentResult;
+                result = result + interList.get(internetsLeastToGreat[i]).getName() +":"+getPercentFront(percentResult)+"."+getPercentBack(percentResult)+"$"+"\n";
+                //k++;
+            }
+            getTotalNets();
+            outPrintln("done.");
+        }
+        result = result + "Sum Total: "+getPercentFront(sum)+"."+getPercentBack(sum)+"$"+"\n";
         return result;
+    }
+    
+    private int[][] doubleCheck(int aIn, int[][] pLArray, int[] iSLTGArray){
+        int expectedValue = aIn;
+        int returnedValue = 0;
+        int diff = 0;
+        int[][] dCheck = new int[3][iSLTGArray.length];
+        for(int i = 0; i < pLArray[0].length; i++){
+            returnedValue += ((pLArray[1][i]*aIn)/10000);
+        }
+        if(returnedValue < expectedValue){
+            int iSL = 0;
+            for(int i : iSLTGArray){
+                dCheck[0][iSL] = i;
+                iSL++;
+            }
+            diff = expectedValue-returnedValue;
+            int l = 0;
+            for(int k = 0; k < diff; k++){
+                if(l >= dCheck[0].length){
+                    l = 0;
+                }
+                dCheck[1][l] -= 1;
+                dCheck[2][l] += 1;
+            }
+        }
+        else if(returnedValue > expectedValue){
+            int iSL = iSLTGArray.length-1;
+            for(int i : iSLTGArray){
+                dCheck[0][iSL] = i;
+                iSL--;
+            }
+            diff = returnedValue-expectedValue;
+            int l = 0;
+            for(int k = 0; k < diff; k++){
+                if(l >= dCheck[0].length){
+                    l = 0;
+                }
+                dCheck[1][l] += 1;
+                dCheck[2][l] -= 1;
+            }
+        }
+        else{
+            return null;
+        }
+        int[][] d2Check = new int[dCheck.length][dCheck[0].length];
+        for(int i = 0; i < pLArray[0].length;i++){
+            d2Check[0][i] = pLArray[0][i];
+            boolean isIn = false;
+            for(int k = 0; k < dCheck[0].length;k++){
+                if(!isIn && d2Check[0][i] == dCheck[0][k]){
+                    d2Check[1][i] = dCheck[1][k];
+                    d2Check[2][i] = dCheck[2][k];
+                    isIn = true;
+                }
+            }
+        }
+        return dCheck;
     }
     
     private String getPercentFront(int a){
@@ -400,6 +502,7 @@ public class InternetsList
     }
     
     public String printOutText(boolean a, boolean i, boolean n, boolean p){
+        percentagesMethods();
         String result = "name:internets:percentage of total"+"\n";
         outPrint("Preparing printout");
         for(Internets k : interList){
