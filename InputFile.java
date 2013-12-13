@@ -3,18 +3,20 @@
  * will take in file, copy file to List, then save to file
  */
 import java.io.*;
+//import java.net.URL;
 import java.util.*;
+//import java.lang.ClassLoader;
 import java.nio.file.Files;
-import java.nio.file.Path;
+//import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.FileSystems;
+//import java.nio.file.FileSystems;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 public class InputFile //implements ErrorMessages
 {
     private List<String> theFile;
     private Charset charset;
-    private Path path;
+    //private Path path;
     private ErrorMessages errs;
     //private Files file;
     
@@ -46,7 +48,8 @@ public class InputFile //implements ErrorMessages
     
     private void readInFile(){
         try{
-            theFile = Files.readAllLines(Paths.get("Internets.txt"), charset);
+        	//ClassLoader cl = new ClassLoader();
+            theFile = Files.readAllLines(Paths.get(getClass().getClassLoader().getResource("Internets.txt").getPath()), charset);
             printDotLoad(5);
         }
         catch(IOException e){
@@ -64,7 +67,7 @@ public class InputFile //implements ErrorMessages
             outPrintln("done.");
         }
         catch(IOException e){
-            outPrintln(errs.values()[13].errors()+" :Unable to write to file");
+            outPrintln(ErrorMessages.values()[13].errors()+" :Unable to write to file");
             //outPrintln(ErrorMessages.errors[13]+" :Unable to write to file");
         }
     }

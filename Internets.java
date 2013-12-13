@@ -39,6 +39,12 @@ public class Internets
         }
         else{
             isEmpty = true;
+            
+            
+            String thisa = "text";
+            String thisb = thisa;
+            thisb = thisa = "text"
+            new
         }
     }
     /**

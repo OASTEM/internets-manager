@@ -17,7 +17,7 @@ public class InternetsRunner// implements ErrorMessages
      * add internets to an exisiting account
      * subtract internets from an exising account
      * printout internets data of everyone
-     * printout internets data of an account
+     * //printout internets data of an account
      * buy something with certain number of internets (which should display the amount each person pays)
      * quit the machine
      */
@@ -40,7 +40,7 @@ public class InternetsRunner// implements ErrorMessages
                                 "   -i                      ;Print all internets"+"\n"+ //sorted by name
                                 "   -n                      ;Print all names"+"\n"+ //sorted by name
                                 "   -p                      ;Print all percentages"+"\n"+ //sorted by name
-                                "printout [name]:[internets];Print out an account"+"\n"+
+                               // "printout [name]:[internets];Print out an account"+"\n"+ NOT IMPLEMENTED YET
                                 "q                          ;Quits program"+"\n"+
                                 "save                       ;Saves current internets accounts"+"\n"+
                                 "                            to file"+"\n"+
@@ -49,7 +49,7 @@ public class InternetsRunner// implements ErrorMessages
                                 "v                          ;Prints current version"+"\n"+"\n"+
                                 "Multiply internets values by 100 before entering"+"\n"+
                                 "Press enter to return to main menu";
-    private static String version = "InternetsAccounts v0.9.2";
+    private static String version = "InternetsAccounts v0.9.2"; //Give compile error to prompt updated version #
     private static ErrorMessages errs;
     private static String name;
     private static int internets;
@@ -62,6 +62,11 @@ public class InternetsRunner// implements ErrorMessages
     //private static static final String gback1 = "Going back a menu";
     private static boolean notD, listEmpty, quit, isValid, aFlag, iFlag, nFlag, pFlag, action;//, negInput;
     private static int[] buyLocs, locArray;
+    
+    /**
+     * Main method, begins startup routine
+     * results in program start
+     */
     public static void main(String[] args){
         startUpCommands();
         outPrintln("Startup Complete");
@@ -69,15 +74,30 @@ public class InternetsRunner// implements ErrorMessages
         begin();
     }
     
+    /**
+     * Startup methods
+     * of pertaining to initial program startup
+     */
+    
+    /**
+     * method contains all the start up methods in one location
+     * Begin: starts up program
+     * End: results in program intial startup complete
+     */
     private static void startUpCommands(){
         coreStartUp();
-        //primitiveTypeStartUp();
+        //primitiveTypeStartUp(); //already planned to run in begin method
         outPrintln("Eating Bagel");
         otherObjectStartUp();
         runStartUp();
         outPrintln("Initializing Potato");
     }
     
+    /**
+     * core parts of program (input file and internet accounts list)
+     * Begin: starts up program
+     * End: results in readIn from file and list of Internet Accounts created
+     */
     private static void coreStartUp(){
         outPrintln("Begin core start up");
         inFile = new InputFile();
@@ -86,6 +106,12 @@ public class InternetsRunner// implements ErrorMessages
         outPrintln("End core start up");
     }
     
+    /**
+     * method runs in begin 
+     * NOT in startup commands
+     * Begin: certain variables undeclared or data dirty
+     * End: variables declared, dirty data cleaned
+     */
     private static void primitiveTypeStartUp(){
         outPrint("Setting values");
         quit = false;
@@ -110,6 +136,11 @@ public class InternetsRunner// implements ErrorMessages
         outPrintln("done.");
     }
     
+    /**
+     * creates objects less important to core startup
+     * Begin: certain objects unintialized
+     * End: Those objects are intialized
+     */
     private static void otherObjectStartUp(){
         outPrint("Creating Necessary Objects");
         sc = new Scanner(System.in);
@@ -118,10 +149,22 @@ public class InternetsRunner// implements ErrorMessages
         outPrintln("done.");
     }
     
+    /**
+     * methods that run (no default declarations or object intilzation
+     * Begin: variables/objects requring running of method to create
+     * End: variables/objects created after running method
+     */
     private static void runStartUp(){
         outPrintln("Defeating Wheatly");
         locArray = interList.getALocArray(interList.getInterList());
     }
+    
+    //End start up methods
+        
+    /**
+     * Outprint methods,
+     * methods for printing text to console.
+     */
     
     private static void outPrintEndMM(int errNum, int dotNum, String end){
         //outPrint(ErrorMessages.errors[errNum]);
@@ -135,6 +178,14 @@ public class InternetsRunner// implements ErrorMessages
         outPrint(first);
         printDotLoad(dotNum);
         outPrintln(end);
+    }
+    
+    private static void outPrintln(String text){
+        System.out.println(text);
+    }
+    
+    private static void outPrint(String text){
+        System.out.print(text);
     }
     
     //private static void outPrintEndM(int errNum, int dotNum)
@@ -152,180 +203,14 @@ public class InternetsRunner// implements ErrorMessages
         }
     }
     
-    private static void parseText(String str, int afterSpace){
-        int colIndex = str.indexOf(":");
-        if(colIndex < 0){
-            //outPrint("in here");
-            outPrintEndMM(1, 3, gback);
-            isValid = false;
-        }
-        else if(str.substring(afterSpace,afterSpace+1).equals(" ")){
-            outPrintEndMM(1, 3, gback);
-            isValid = false;
-        }
-        else{
-            name = str.substring(afterSpace,colIndex);
-            try{
-                internets = Integer.parseInt(str.substring(colIndex+1, str.length()));
-            }
-            catch(NumberFormatException e){
-                outPrintEndMM(1, 3, gback);
-                isValid = false;
-            }
-        }
-    }
+    //End outPrint methods
     
-    private static void enterInList(){
-        notD = true;
-        listEmpty = false;
-        ArrayList<Integer> buyLocsInt = new ArrayList<Integer>();
-        while(notD){
-            String inStr = sc.nextLine();
-            if(inStr.equalsIgnoreCase("d")){
-                notD = false;
-            }
-            else if(inStr.equalsIgnoreCase("q")){
-                notD = false;
-                quit = true;
-            }
-            else{
-                int index = interList.findInternets(inStr,interList.getInterList(), locArray);
-                if(index < 0){
-                    //notD = false;
-                    outPrintEndMM(3, 3, "Try Again or enter 'd' if done");
-                }
-                else{
-                    buyLocsInt.add(index);
-                }
-            }
-        }
-        if(buyLocsInt.size() < 1){
-            listEmpty = true;
-        }
-        else{
-            buyLocs = Ints.toArray(buyLocsInt);
-        }
-    }
+    /**
+     * User input and processing methods
+     * Begin with begin()
+     */
     
-    private static void correctPurchase(){
-        outPrintln("Type in the amount of purchase");
-        parseIntText();
-        outPrintln("Is " +internets+ " the correct amount of purchase? (Y/n)");
-        String inTemp = sc.nextLine();
-        if(inTemp.equalsIgnoreCase("Y")){
-            result = interList.calculatePayments(buyLocs, internets);
-            action = true;
-        }
-        else if(inTemp.equalsIgnoreCase("n")){
-            outPrintEndMMT("Reloading",3,"done");
-            correctPurchase();
-        }
-        else if(inTemp.equalsIgnoreCase("q")){
-            quit = true;
-        }
-        else{
-            outPrintEndMM(1,3,"Try Again");
-        }
-    }    
-    
-    private static void correctAccounts(){
-        outPrintln("Are these the right accounts to modify? (Y/n)");
-        for(int bl : buyLocs){
-            outPrintln(interList.getInterList().get(bl).getName());
-        }
-        String inTemp = sc.nextLine();
-        if(inTemp.equalsIgnoreCase("y")){                        
-            correctPurchase();
-        }
-        else if(inTemp.equalsIgnoreCase("n")){
-            outPrintEndMMT("Reloading",3,"done");
-            buyCommand();
-        }
-        else if(inTemp.equalsIgnoreCase("q")){
-            quit = true;
-        }
-        else{
-            outPrintEndMM(1,3,"Try Again");
-            correctAccounts();
-        }
-    }
-    
-    private static void parseFlags(String in){
-        String toParse = in.substring(0,1);
-        if(toParse.equals("q")){
-            quit = true;
-        }
-        else if(toParse.equals("a")){
-            aFlag = true;
-        }
-        else if(toParse.equals("i")){
-            iFlag = true;
-        }
-        else if(toParse.equals("n")){
-            nFlag = true;
-        }
-        else if(toParse.equals("p")){
-            pFlag = true;
-        }
-        if(!quit && !aFlag){
-            if(in.length() > 1){
-                parseFlags(in.substring(1,in.length()));
-            }
-        }
-    }
-            
-    
-    private static void parsePrintText(String in){
-        if(in.length() < 11){
-            outPrintEndMM(7,3,gback);
-        }
-        else{
-            int index = in.indexOf("-");
-            if(index < 0){
-                outPrintEndMM(7,3,gback);
-            }
-            else{
-                parseFlags(in.substring(index+1,in.length()));
-            }
-        }
-    }
-        
-    private static void buyCommand(){
-        outPrintln("Type in names of accounts making purchase then press enter. Type in 'd' when finished");
-        enterInList();
-        if(!quit){
-            if(listEmpty){
-                outPrintEndMM(4, 3, gback);
-            }
-            else{
-                correctAccounts();
-            }
-        }
-    }
-    
-    private static void parseIntText(){
-        String inStr = sc.nextLine();
-        if(inStr.equalsIgnoreCase("q")){
-            outPrintEndMMT("Stopping", 3, "");
-            quit = true;
-        }
-        else{
-            try{
-                internets = Integer.parseInt(inStr);
-                if(internets < 0){
-                    outPrintEndMM(6,3,"Try Again:");
-                    parseIntText();
-                }
-            }
-            catch(NumberFormatException e){
-                outPrintEndMM(1,3,"Try Again:");
-                parseIntText();
-            }
-        }
-    }
-            
-    
-    private static void begin(){
+     private static void begin(){
         primitiveTypeStartUp();
         outPrintln("What would you like to do? (Type in 'help' to list options)");
         String inputLine = sc.nextLine();
@@ -424,12 +309,210 @@ public class InternetsRunner// implements ErrorMessages
         }
     }
     
-    private static void outPrintln(String text){
-        System.out.println(text);
+    /**
+     * Parse Text methods
+     */
+    
+    /**
+     * Used in:
+     * add
+     * create
+     * subtract
+     */
+    private static void parseText(String str, int afterSpace){
+        int colIndex = str.indexOf(":");
+        if(colIndex < 0){
+            //outPrint("in here");
+            outPrintEndMM(1, 3, gback);
+            isValid = false;
+        }
+        else if(str.substring(afterSpace,afterSpace+1).equals(" ")){
+            outPrintEndMM(1, 3, gback);
+            isValid = false;
+        }
+        else{
+            name = str.substring(afterSpace,colIndex);
+            try{
+                internets = Integer.parseInt(str.substring(colIndex+1, str.length()));
+            }
+            catch(NumberFormatException e){
+                outPrintEndMM(1, 3, gback);
+                isValid = false;
+            }
+        }
     }
     
-    private static void outPrint(String text){
-        System.out.print(text);
+    /**
+     * used in:
+     * printout
+     * -parsePrintText
+     */
+    private static void parseFlags(String in){
+        String toParse = in.substring(0,1);
+        if(toParse.equals("q")){
+            quit = true;
+        }
+        else if(toParse.equals("a")){
+            aFlag = true;
+        }
+        else if(toParse.equals("i")){
+            iFlag = true;
+        }
+        else if(toParse.equals("n")){
+            nFlag = true;
+        }
+        else if(toParse.equals("p")){
+            pFlag = true;
+        }
+        if(!quit && !aFlag){
+            if(in.length() > 1){
+                parseFlags(in.substring(1,in.length()));
+            }
+        }
     }
     
+    /**
+     * Used in:
+     * printout
+     */
+    private static void parsePrintText(String in){
+        if(in.length() < 11){
+            outPrintEndMM(7,3,gback);
+        }
+        else{
+            int index = in.indexOf("-");
+            if(index < 0){
+                outPrintEndMM(7,3,gback);
+            }
+            else{
+                parseFlags(in.substring(index+1,in.length()));
+            }
+        }
+    }
+    
+    /**
+     * Used in:
+     * buy
+     * -buyCommand
+     * --correctAccounts
+     * ---correctPurchase
+     */
+    private static void parseIntText(){
+        String inStr = sc.nextLine();
+        if(inStr.equalsIgnoreCase("q")){
+            outPrintEndMMT("Stopping", 3, "");
+            quit = true;
+        }
+        else{
+            try{
+                internets = Integer.parseInt(inStr);
+                if(internets < 0){
+                    outPrintEndMM(6,3,"Try Again:");
+                    parseIntText();
+                }
+            }
+            catch(NumberFormatException e){
+                outPrintEndMM(1,3,"Try Again:");
+                parseIntText();
+            }
+        }
+    }
+    
+    //End parse text methods
+    
+    /**
+     * buy methods
+     */
+    
+    private static void buyCommand(){
+        outPrintln("Type in names of accounts making purchase then press enter. Type in 'd' when finished");
+        enterInList();
+        if(!quit){
+            if(listEmpty){
+                outPrintEndMM(4, 3, gback);
+            }
+            else{
+                correctAccounts();
+            }
+        }
+    }
+    
+    private static void enterInList(){
+        notD = true;
+        listEmpty = false;
+        ArrayList<Integer> buyLocsInt = new ArrayList<Integer>();
+        while(notD){
+            String inStr = sc.nextLine();
+            if(inStr.equalsIgnoreCase("d")){
+                notD = false;
+            }
+            else if(inStr.equalsIgnoreCase("q")){
+                notD = false;
+                quit = true;
+            }
+            else{
+                int index = interList.findInternets(inStr,interList.getInterList(), locArray);
+                if(index < 0){
+                    //notD = false;
+                    outPrintEndMM(3, 3, "Try Again or enter 'd' if done");
+                }
+                else{
+                    buyLocsInt.add(index);
+                }
+            }
+        }
+        if(buyLocsInt.size() < 1){
+            listEmpty = true;
+        }
+        else{
+            buyLocs = Ints.toArray(buyLocsInt);
+        }
+    }
+    
+    private static void correctAccounts(){
+        outPrintln("Are these the right accounts to modify? (Y/n)");
+        for(int bl : buyLocs){
+            outPrintln(interList.getInterList().get(bl).getName());
+        }
+        String inTemp = sc.nextLine();
+        if(inTemp.equalsIgnoreCase("y")){                        
+            correctPurchase();
+        }
+        else if(inTemp.equalsIgnoreCase("n")){
+            outPrintEndMMT("Reloading",3,"done");
+            buyCommand();
+        }
+        else if(inTemp.equalsIgnoreCase("q")){
+            quit = true;
+        }
+        else{
+            outPrintEndMM(1,3,"Try Again");
+            correctAccounts();
+        }
+    }
+    
+    private static void correctPurchase(){
+        outPrintln("Type in the amount of purchase");
+        parseIntText();
+        outPrintln("Is " +internets+ " the correct amount of purchase? (Y/n)");
+        String inTemp = sc.nextLine();
+        if(inTemp.equalsIgnoreCase("Y")){
+            result = interList.calculatePayments(buyLocs, internets);
+            action = true;
+        }
+        else if(inTemp.equalsIgnoreCase("n")){
+            outPrintEndMMT("Reloading",3,"done");
+            correctPurchase();
+        }
+        else if(inTemp.equalsIgnoreCase("q")){
+            quit = true;
+        }
+        else{
+            outPrintEndMM(1,3,"Try Again");
+        }
+    }    
+    
+    //End buy methods
+    
+    //End user input and processing methods
 }

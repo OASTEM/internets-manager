@@ -1,4 +1,4 @@
-import java.io.*;
+//import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -203,6 +203,14 @@ public class MergeSort {
         }
         //return a;
     }
+    /**
+     * {0, 4, 5,6 , 8}
+     * {{1,2},{4,5},{7,8}}
+     * 1  4  7
+     * 2  5  8
+     * 
+     * 
+     */
     
     static int[][] copy2DArray(int[][] nums, int start, int end, int size){
         int[][] tempArray = new int[2][size];
@@ -339,7 +347,12 @@ public class MergeSort {
         }
         //outPrintln(".");
     }
-
+    //a == b
+    //String a;
+    //a.equals("text");
+    //a.equals(b);
+    //apple
+    //anger
     static void mergeStr(String[] a, String[] l, String[] r) {
         int totElem = l.length + r.length;
         //int[] a = new int[totElem];
